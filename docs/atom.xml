@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title>Gwydd's Blog</title>
+    <subtitle><![CDATA[Latest articles from Gwydd's blog]]></subtitle>
     <link href="https://gwydd.ch/atom.xml" rel="self" />
     <link href="https://gwydd.ch" />
     <id>https://gwydd.ch/atom.xml</id>

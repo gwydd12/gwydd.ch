@@ -1,0 +1,51 @@
+/* Self-hosted EB Garamond (SIL Open Font License, Georg Duffner / Octavio
+   Pardo). Downloaded from https://fonts.google.com/specimen/EB+Garamond via
+   "Get font" -> "Download all". That zip's static/ folder has separate
+   files per weight/style; you only need these four for regular text +
+   bold + italic + bold-italic. Drop them under fonts/ at the project root
+   (routed by the existing `match "fonts/*"` rule in site.hs):
+
+     fonts/EBGaramond-Regular.ttf
+     fonts/EBGaramond-Italic.ttf
+     fonts/EBGaramond-Bold.ttf
+     fonts/EBGaramond-BoldItalic.ttf
+
+   (The zip also ships weights 500/600/800 and a variable-font version --
+   skip those unless you actually use font-weight values other than
+   normal/bold somewhere.) */
+
+@font-face {
+    font-family: "EB Garamond";
+    src: url("/fonts/EBGaramond-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "EB Garamond";
+    src: url("/fonts/EBGaramond-Italic.ttf") format("truetype");
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "EB Garamond";
+    src: url("/fonts/EBGaramond-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "EB Garamond";
+    src: url("/fonts/EBGaramond-BoldItalic.ttf") format("truetype");
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+body {
+    font-family: "EB Garamond", serif;
+}

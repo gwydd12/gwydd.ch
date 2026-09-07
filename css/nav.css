@@ -1,0 +1,111 @@
+/* --- Desktop: flex, navbar left, content absorbs the rest --- */
+
+body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.navbar-space {
+    flex: 0 0 18%;
+    box-sizing: border-box;
+}
+
+main {
+    flex: 1;
+    min-width: 0;
+}
+
+footer {
+    flex: 1 0 100%;       /* own row below everything */
+    margin-top: 3rem;
+}
+
+div#footer {
+    padding-left: 18%;    /* match .navbar-space width */
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* --- Menu styling --- */
+
+div#navigation {
+    text-align: left;
+    padding-left: 1.25em;
+    padding-right: 1.5em;
+    padding-top: 2.2em;
+    padding-bottom: 1em;
+
+    .menu-title {
+        font-size: 1.3rem;
+        color: var(--fg);
+        border-bottom: 1px solid var(--fg-menu-border);
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    a {
+        font-size: 1.3rem;
+        font-weight: bold;
+        border: 1px solid transparent;
+        border-left: none;
+        border-right: none;
+        color: var(--fg-menu);
+        display: block;
+        line-height: 1.5em;
+        padding: 0.3rem 1.25rem;
+        white-space: nowrap;
+        &:hover {
+            background: var(--bg);
+            text-decoration: 1px underline;
+            text-underline-offset: 0.1em;
+        }
+    }
+
+    /* Stack navigation above the content on medium screens */
+    @media (width <= 1366px) {
+        .navbar-space,
+        main {
+            flex: 1 0 100%;
+        }
+    }
+}
+
+/* --- Mobile --- */
+@media (width <= 767px) {
+    body > .navbar-space {
+        width: 100%;
+    }
+
+    div#navigation {
+        position: static;
+        text-align: center;
+        a { padding: 5px 10px; }
+    }
+
+    div#navigation > ul > li {
+        display: inline-block;
+    }
+
+    /* Article: centered, readable column */
+    main {
+        margin: 0 auto;
+        padding: 0 1.25rem;
+        max-width: 80ch;
+    }
+
+    /* Title a bit tamer on phones */
+    h1 {
+        font-size: 2.4rem;
+        line-height: 1.2;
+    }
+
+    /* Footer truly centered on mobile */
+    div#footer {
+        padding-left: 0;
+    }
+}

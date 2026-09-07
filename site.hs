@@ -1,10 +1,20 @@
---------------------------------------------------------------------------------
+{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ViewPatterns      #-}
 import           Data.Monoid (mappend)
 import           Hakyll
 import           Text.Pandoc.Options
-import           Text.Pandoc.Highlighting (zenburn, styleToCss)
-
+-- Pygments integration
+import           Control.Concurrent.MVar
+import           Control.Monad          (replicateM)
+import           Data.Maybe             (listToMaybe)
+import qualified Data.Text as T
+import           System.IO
+import           System.IO.Unsafe       (unsafePerformIO)
+import           System.Process
+import           Text.Pandoc.Definition (Block (CodeBlock, RawBlock), Pandoc)
+import           Text.Pandoc.SideNoteHTML (usingSideNotesHTML)
+import           Text.Pandoc.Walk       (walkM)
 
 root :: String
 root = "https://gwydd.ch"
@@ -17,15 +27,59 @@ pandocMathCompiler =
                               writerExtensions = newExtensions,
                               writerHTMLMathMethod = MathJax ""
                             }
-    in pandocCompilerWith defaultHakyllReaderOptions writerOptions
+    in pandocCompilerWithTransformM
+           defaultHakyllReaderOptions
+           writerOptions
+           (pygmentsHighlight . usingSideNotesHTML writerOptions)
+
+--------------------------------------------------------------------------------
+-- A persistent `pygments-server.py` process (see scripts/pygments-server.py),
+-- started lazily on first use and reused for the rest of the build. This
+-- replaces spawning a fresh `pygmentize` process per code block, mirroring
+-- how the KaTeX integration (`hlKaTeX`) keeps one long-lived `node` process
+-- around instead of re-launching it for every formula.
+pygmentsHandles :: MVar (Handle, Handle)
+pygmentsHandles = unsafePerformIO $ do
+    (Just hin, Just hout, _, _) <-
+        createProcess (proc "python3" ["scripts/pygments-server.py"])
+            { std_in  = CreatePipe
+            , std_out = CreatePipe
+            }
+    mapM_ (`hSetEncoding` utf8) [hin, hout]
+    mapM_ (`hSetBuffering` NoBuffering) [hin, hout]
+    newMVar (hin, hout)
+{-# NOINLINE pygmentsHandles #-}
+
+pygmentsHighlight :: Pandoc -> Compiler Pandoc
+pygmentsHighlight = walkM $ \case
+    CodeBlock (_, (T.unpack -> lang) : _, _) (T.unpack -> body) ->
+      RawBlock "html" . T.pack <$> unsafeCompiler (callPygs lang body)
+    block -> pure block
+  where
+    callPygs :: String -> String -> IO String
+    callPygs lang body = withMVar pygmentsHandles $ \(hin, hout) -> do
+        hPutStrLn hin lang
+        hPutStrLn hin (show (length body))
+        hPutStr   hin body
+        hFlush    hin
+        n <- read <$> hGetLine hout
+        replicateM n (hGetChar hout)
+--------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyllWith defaultConfiguration {destinationDirectory = "docs"} $ do
-    
+
     match "templates/*" $ compile templateBodyCompiler
 
     match "images/*" $ do
+        route   idRoute
+        compile copyFileCompiler
+
+    -- Self-hosted webfonts (EB Garamond is pulled from Google Fonts via CSS
+    -- @import instead, so it doesn't need a route; Discipuli Britannica has
+    -- no CDN, so its .ttf files live here).
+    match "fonts/*" $ do
         route   idRoute
         compile copyFileCompiler
 
@@ -38,7 +92,7 @@ main = hakyllWith defaultConfiguration {destinationDirectory = "docs"} $ do
         compile $ pandocMathCompiler
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
-    
+
     match "robots.txt" $ do
         route idRoute
         compile copyFileCompiler
@@ -50,7 +104,7 @@ main = hakyllWith defaultConfiguration {destinationDirectory = "docs"} $ do
             >>= saveSnapshot "content"
             >>= loadAndApplyTemplate "templates/default.html" articleCtx
             >>= relativizeUrls
-    
+
     match "notes/*" $ do
         route $ setExtension "html"
         compile $ pandocMathCompiler
@@ -58,10 +112,6 @@ main = hakyllWith defaultConfiguration {destinationDirectory = "docs"} $ do
             >>= saveSnapshot "content"
             >>= loadAndApplyTemplate "templates/default.html" noteCtx
             >>= relativizeUrls
-
-    create ["css/syntax.css"] $ do
-        route idRoute
-        compile $ makeItem $ styleToCss zenburn
 
     create ["articles.html"] $ do
         route idRoute
@@ -76,7 +126,7 @@ main = hakyllWith defaultConfiguration {destinationDirectory = "docs"} $ do
                 >>= loadAndApplyTemplate "templates/articles.html" articlesCtx
                 >>= loadAndApplyTemplate "templates/default.html" articlesCtx
                 >>= relativizeUrls
-    
+
     create ["notes.html"] $ do
         route idRoute
         compile $ do
@@ -104,14 +154,14 @@ main = hakyllWith defaultConfiguration {destinationDirectory = "docs"} $ do
                 >>= applyAsTemplate indexCtx
                 >>= loadAndApplyTemplate "templates/default.html" indexCtx
                 >>= relativizeUrls
-    
+
     create ["atom.xml"] $ do
         route idRoute
         compile $ do
             articles <- recentFirst =<< loadAllSnapshots "articles/*" "content"
             let feedCtx = articleCtx `mappend` bodyField "description"
             renderAtom feedConfig feedCtx articles
-  
+
 
 --------------------------------------------------------------------------------
 feedConfig :: FeedConfiguration
@@ -122,7 +172,7 @@ feedConfig = FeedConfiguration
     , feedAuthorEmail = "me@gwydd.ch"
     , feedRoot        = root
     }
---------------------------------------------------------------------------------   
+--------------------------------------------------------------------------------
 articleCtx :: Context String
 articleCtx =
     constField "root" root      <>

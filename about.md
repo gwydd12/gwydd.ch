@@ -26,6 +26,6 @@ I live in a distant town, far from most things. However, the internet connects m
 
 I'm available on these channels. **Only** the accounts listed here are the official ones. Any others are either imposters or people using the same pseudonym.
 
-- E-Mail: [me@gwydd.ch](mailto://me@gwydd.ch)
+- E-Mail: [me(at)gwydd.ch](mailto://me@gwydd.ch)
 - Github: [gwydd](https://github.com/gwydd12/)
 - Mastadon: [gwydd](https://infosec.exchange/@gwydd)

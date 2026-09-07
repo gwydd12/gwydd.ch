@@ -1,0 +1,39 @@
+/* Self-hosted Discipuli Britannica (Peter Wiegel, SIL Open Font License).
+   Download regular + bold from:
+     https://www.fontspace.com/peter-wiegel/discipuli-britannica
+   and place them under fonts/ at the project root (routed by the existing
+   `match "fonts/*"` rule in site.hs):
+
+     fonts/DiscipuliBritannica.ttf
+     fonts/DiscipuliBritannica-Bold.ttf
+
+   Double-check the exact filenames FontSpace gives you on download --
+   rename to match the url()s below, or edit the url()s to match the
+   download. A mismatch fails silently (falls back to `cursive`) rather
+   than erroring, so it's easy to miss. */
+
+@font-face {
+    font-family: "Discipuli Britannica";
+    src: url("/fonts/DiscipuliBritannica.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Discipuli Britannica";
+    src: url("/fonts/DiscipuliBritannica-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Apply it to the sidenote/marginnote elements. If you're keeping these
+   rules in sidenotes.css instead (as in the version I gave you earlier),
+   drop this block to avoid duplicating it. */
+.sidenote,
+.marginnote,
+.marginnote-left,
+label.sidenote-number {
+    font-family: "Discipuli Britannica", cursive;
+}
