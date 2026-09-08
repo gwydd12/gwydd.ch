@@ -127,9 +127,9 @@ article > * + * {
 code,
 pre,
 kbd {
-  font-family: "EB Garamond", serif;
   font-size: 85%;
   hyphens: none;
+  color: #000;
 }
 pre {
   padding: 1rem 1.4rem;
@@ -148,6 +148,12 @@ kbd {
   border-radius: 2px;
   padding: 2px 4px;
   font-size: 75%;
+}
+
+:where(code, pre, kbd) {
+    font-family: "JetBrains Mono", "SF Mono", ui-monospace,
+                 Menlo, Consolas, monospace;
+    font-variant-ligatures: none;
 }
 
 /* Better tables */

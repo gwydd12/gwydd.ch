@@ -2,30 +2,21 @@
 title: About
 ---
 
-Hello, I'm gwydd!
+I'm a graduate student in computer science at the University of ....
+Previously, I did my bachelor's degree at the University of ..., where I had the pleasure on working on the [Flix](https://flix.dev/) compiler tooling, implementing the first source code formatter for the Flix programming language[^bsc.thesis].
 
-I'm a computer science student, currently focused on software development and programming languages. 
-Although my studies keep me quite busy, I still find time to tinker with Linux, compilers, interpreters and ctf challenges during my free time. 
-I'm a passionate enthusiast of open-source development, free software, and internet privacy.
+My work and interests in computer science are security with a focus on program analysis and programming language theory surrounding effect systems. At the moment I'm particularly interested in securing development environments and tools combining those research fields. In case you have similar interests or want to explore what I am working on at the moment, I would be more than honored to receive a message from you.
 
-Aside from my technical pursuits, I also enjoy reading. 
-At the moment, I'm reading "The Nausea" by Jean-Paul Sartre, exploring existentialism.
+In the many hours of free time, I play around with Linux and free software. Sometimes, I fiddle around the world of security research and surprisingly find vulnerabilities with my limited skills, some even received CVEs or, the holy grail of bug bounty, nothing and all this before the lovely[^sarcasm] AI era. Aside from my digital life, I do sometimes participate in real life. I enjoy reading, good movies, dallying on long walks and probably to philosophize too much.
 
-If you're wondering about the meaning behind "gwydd"—it's the Welsh word for "goose." 
-I don't have any Welsh heritage (at least, none that I'm aware of), but I found the word amusing, and it stuck as my username.
+In case you are also excited about these topics and would like to work with me or just have a chat, please don't hesitate to send me an email!
 
-A fun fact about this blog: it's built using the static site generator Hakyll. 
-Even though I have no prior experience with the Haskell environment (the language Hakyll is written in), however, 
-I took it as a chance to experiment with a new technology. This aligns with the whole motto of this blog:
-to explore and tinker around.
-
-And yes, as you can tell by the design of this site my designer skills and my taste is not particularly good.
-
-# Contact
-I live in a distant town, far from most things. However, the internet connects me to the world, allowing me to communicate with people globally. Feel free to reach out if we share the same interests or if you're just looking for a random conversation.
-
-I'm available on these channels. **Only** the accounts listed here are the official ones. Any others are either imposters or people using the same pseudonym.
-
-- E-Mail: [me(at)gwydd.ch](mailto://me@gwydd.ch)
+- E-Mail: [gwydd12(at)proton.me](mailto://gwydd12@proton.me)
 - Github: [gwydd](https://github.com/gwydd12/)
 - Mastadon: [gwydd](https://infosec.exchange/@gwydd)
+- Flix Zulip: [gwydd](https://flix.zulipchat.com/#user/1073663)
+
+I do not use any other social media.
+
+[^bsc.thesis]: If you would like to read my thesis, please write me an email.
+[^sarcasm]: This should be read in a sarcastic tone.
